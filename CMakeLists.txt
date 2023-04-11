@@ -1,13 +1,21 @@
-﻿cmake_minimum_required(VERSION 3.10.0)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-cmake_policy(SET CMP0057 NEW)
+﻿cmake_minimum_required(VERSION 3.0.0)
+set(CMAKE_CXX_STANDARD 17)
 
 project ("MenuMusicToggle")
 
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp ../curly-eureka/*.cpp)
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
+
+# this is so stupid
+set(CMAKE_SIZEOF_VOID_P 4)
+
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
+  # ensure 32 bit on clang
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -target i386-pc-windows-msvc")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -target i386-pc-windows-msvc")
+  add_definitions("--target=i386-pc-windows-msvc")
+endif()
+
 target_include_directories(${PROJECT_NAME} PRIVATE
   ../curly-eureka/minhook/include
   ../curly-eureka/gd.h/include
