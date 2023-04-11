@@ -12,13 +12,12 @@ using namespace cocos2d::extension;
 class GJOptionsLayerHook {
 public:
     void onMenuMusicToggle(cocos2d::CCObject* pSender) {
-        auto GM = GameManager::sharedState();
-        if (GM->getGameVariable("0122")) {
-            GM->setGameVariable("0122", false);
+        if (GameManager::sharedState()->getGameVariable("0122")) {
+            GameManager::sharedState()->setGameVariable("0122", false);
             GameManager::sharedState()->fadeInMusic("menuLoop.mp3");
         }
         else {
-            GM->setGameVariable("0122", true);
+            GameManager::sharedState()->setGameVariable("0122", true);
             GameSoundManager::sharedState()->stopBackgroundMusic();
         }
     }
@@ -26,7 +25,6 @@ public:
 void __fastcall  OptionsLayer_customSetup(GJDropDownLayer* self) {
     MHook::getOriginal(OptionsLayer_customSetup)(self);
     CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-    auto GM = GameManager::sharedState();
     auto m_pLayer = self->m_pLayer;
     auto m_pListLayer = self->m_pListLayer;
 
@@ -42,7 +40,7 @@ void __fastcall  OptionsLayer_customSetup(GJDropDownLayer* self) {
         m,
         (cocos2d::SEL_MenuHandler)&GJOptionsLayerHook::onMenuMusicToggle
     );
-    menuMusicToggle->toggle(bool(GM->getGameVariable("0122")));
+    menuMusicToggle->toggle(bool(GameManager::sharedState()->getGameVariable("0122")));
     m->addChild(menuMusicToggle);
     auto label = CCLabelBMFont::create("Menu\nmusic", "bigFont.fnt", 90, kCCTextAlignmentLeft);
     label->setPosition({ 0, 38 });
