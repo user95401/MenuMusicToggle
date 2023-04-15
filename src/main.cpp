@@ -47,6 +47,15 @@ void __fastcall  OptionsLayer_customSetup(GJDropDownLayer* self) {
     label->setScale({ 0.55f });
     m->addChild(label);
 }
+void __stdcall fadeInMusicHook(const char* filename) {
+    if (bool(GameManager::sharedState()->getGameVariable("0122"))) {
+        if (filename == std::string("menuLoop.mp3")) {
+            GameSoundManager::sharedState()->stopBackgroundMusic();
+            return MHook::getOriginal(fadeInMusicHook)("");
+        }
+    }
+    return MHook::getOriginal(fadeInMusicHook)(filename);
+}
 DWORD WINAPI thread_func(void* hModule) {
     // initialize minhook
     MH_Initialize();
@@ -59,18 +68,10 @@ DWORD WINAPI thread_func(void* hModule) {
     Sleep(sleepMs);
 
     MHook::registerHook(base + 0x1dd420, OptionsLayer_customSetup);
+    MHook::registerHook(base + 0xC4BD0, fadeInMusicHook);
 
     // enable all hooks you've created with minhook
     MH_EnableHook(MH_ALL_HOOKS);
-
-    while (true)
-    {
-        if (FMODAudioEngine::sharedEngine()->isBackgroundMusicPlaying(std::string("menuLoop.mp3"))) { //????
-            if (GameManager::sharedState()->getGameVariable("0122")) {
-                GameSoundManager::sharedState()->stopBackgroundMusic();
-            }
-        }
-    }
 
     return 0;
 }
