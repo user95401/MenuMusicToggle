@@ -6,7 +6,7 @@ cmake_policy(SET CMP0057 NEW)
 
 project ("MenuMusicToggle")
 
-file(GLOB_RECURSE SOURCE_FILES src/*.cpp ../curly-eureka/*.cpp)
+file(GLOB_RECURSE SOURCE_FILES src/* ../curly-eureka/*.cpp)
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
 target_include_directories(${PROJECT_NAME} PRIVATE
   ../curly-eureka/minhook/include
