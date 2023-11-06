@@ -2,18 +2,28 @@
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /MANIFEST:NO")
 cmake_policy(SET CMP0057 NEW)
 
 project ("MenuMusicToggle")
+set(developer "user95401")
+set(version "v3.0.0")
+set(description "Adds menu music toggle (like in 2.2) to Geometry Dash")
+set(repository "https://github.com/user95401/MenuMusicToggle")
+set(issues_url "https://discord.gg/89VGJH6QQg")
+set(issues_info "U can write about it on <cb>user666's discord...</c>")
+set(LIBRARY_OUTPUT_PATH "${CMAKE_CURRENT_LIST_DIR}") # dll output
+set(GEODE_MOD_OUTPUT_PATH "D:\\Games\\user666\\Geometry.Dash.v07.24.2021\\geode\\mods") # geode mod output
 
-file(GLOB_RECURSE SOURCE_FILES src/* ../curly-eureka/*.cpp)
-add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
-target_include_directories(${PROJECT_NAME} PRIVATE
-  ../curly-eureka/minhook/include
-  ../curly-eureka/gd.h/include
-  ../curly-eureka/gd.h
-  ../curly-eureka
+#curly-eureka
+include("C:\\Users\\Lenovo\\source\\curly-eureka\\CURLY-EUREKA-INCL.cmake")
+
+#mod
+file(GLOB_RECURSE src
+src/* 
+src/Layers/*
 )
-add_subdirectory(../curly-eureka/cocos-headers cocos-headers-build)
-add_subdirectory(../curly-eureka/minhook minhook-build)
-target_link_libraries(${PROJECT_NAME} minhook cocos2d)
+add_library(${PROJECT_NAME} SHARED ${src} ${curly_eureka_src})
+
+#geode-makeup
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/geode geode-build)
